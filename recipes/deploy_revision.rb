@@ -51,6 +51,7 @@ deploy(node['project']['deploy']['destination']) do
   repo     node['project']['deploy']['source']
   action   (node['project']['deploy']['force'] ? :force_deploy : :deploy)
   revision node['project']['deploy']['revision']
+  provider Chef::Provider::Deploy::Revision
 
   user     node['project']['deploy']['owner']
   group    node['project']['deploy']['group']
@@ -60,5 +61,16 @@ deploy(node['project']['deploy']['destination']) do
   symlinks({})
   create_dirs_before_symlink []
   purge_before_symlink []
+
+  # Run the hooks
+  before_symlink do
+    node.override['project']['deploy']['release_path'] = release_path
+    run_context.send :include_recipe, node['project']['deploy']['on_prepare']
+  end
+
+  after_restart do
+    node.override['project']['deploy']['release_path'] = release_path
+    run_context.send :include_recipe, node['project']['deploy']['on_complete']
+  end
 
 end

@@ -15,6 +15,23 @@ describe 'ingenerator-source::default' do
 
       chef_run.node['project']['deploy']['destination'].should eq('/var/www/thisproject')
     end
+
+    it "sets the checkout owner to www-data" do
+      chef_run.node['project']['deploy']['owner'].should eq('www-data')
+    end
+
+    it "sets the checkout group to www-data" do
+      chef_run.node['project']['deploy']['group'].should eq('www-data')
+    end
+
+    it "attaches ingenerator-source::prepare_deploy as the on_prepare hook" do
+      chef_run.node['project']['deploy']['on_prepare'].should eq('ingenerator-source::prepare_deploy')
+    end
+
+    it "attaches ingenerator-source::complete_deploy as the on_prepare hook" do
+      chef_run.node['project']['deploy']['on_complete'].should eq('ingenerator-source::complete_deploy')
+    end
+
   end
 
   context 'when node[project][deploy] is :in_place' do

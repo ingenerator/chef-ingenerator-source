@@ -23,16 +23,20 @@
 # Default deploy source for this kind of deployment
 node.default['project']['deploy']['source'] = '/vagrant'
 
-path = ::Pathname.new(node['project']['deploy']['destination'])
-directory path.parent do
+directory node['project']['deploy']['destination'] do
   recursive true
   user      node['project']['deploy']['owner']
   group     node['project']['deploy']['group']
   mode      0755
 end
 
-link node['project']['deploy']['destination'] do
+node.override['project']['deploy']['release_path'] = node['project']['deploy']['destination']+'/current'
+link node['project']['deploy']['release_path'] do
   to    node['project']['deploy']['source']
   user  node['project']['deploy']['owner']
   group node['project']['deploy']['group']
 end
+
+# Run the deploy hooks
+include_recipe node['project']['deploy']['on_prepare']
+include_recipe node['project']['deploy']['on_complete']

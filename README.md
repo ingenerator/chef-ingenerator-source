@@ -79,16 +79,28 @@ and potentially QA should have this attribute set to true.
 
 ### Deployment hooks
 
-You can provide ruby scripts with deployment hooks to run before the checked out code is symlinked into production (or
-at the end of the process for an in-place deploy). These have full access to recipes, resources and the rest of the
-chef environment, but note that they are *not* loaded until during the deployment so they cannot include changes to
-attributes, runlists etc that need to apply outside their own scope.
+You can provide recipes that run as callbacks before the checked out code is symlinked into production, or immediately
+after the deploy completes. These have full access your recipes, resources and the rest of the chef environment but note
+*not* loaded until during the deployment so they are not compiled as part of the main chef compile and in particular
+cannot include changes to attributes, runlists etc that need to apply outside their own scope.
 
-As we use a simplified set of deploy commands, the most useful hooks are likely to be `before_symlink` and
-`after_restart`.
+> *Caution: Use the correct checkout directory in your hooks*
+> During a live deployment, the on_prepare callback is triggered before the symlink to your code has been updated.
+> You should target resources and actions at the directory specified in `node['project']['deploy']['release_path']`
+> which is where your checkout will live.
+>
+> The on_complete hook can target either `node['project']['deploy']['release_path']` or `node['project']['deploy']['destination']`
+> as these paths resolve the same by this point.
 
-If you don't provide your own callbacks then by default the cookbook just checks for a composer.json and if found
-installs your vendors - note that you will need to re-implement this if you add a custom hook.
+| attribute                       | default                             | called                                             |
+|---------------------------------|-------------------------------------|----------------------------------------------------|
+| `project.deploy.on_prepare`     | ingenerator-source::prepare_deploy  | after all files are checked out, before symlinking |
+| `project.deploy.on_complete`    | ingenerator-source::complete_deploy | after deploy linked into production                |
+
+The default `ingenerator-source::prepare_deploy` recipe just checks for a composer.json in your checkout root and if
+found it installs the required composer vendors. You can of course call this from your own custom recipe.
+
+The default `ingenerator-source::complete_deploy` recipe does nothing but is included for completeness.
 
 ```ruby
  # Place the path from the root of your checkout into your attributes file
