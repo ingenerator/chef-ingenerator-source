@@ -94,7 +94,7 @@ describe 'ingenerator-source::deploy_revision' do
     before (:each) do
       `rm -rf /tmp/dest /tmp/src`
       `mkdir -p /tmp/dest/shared /tmp/dest/releases /tmp/src`
-      `cd /tmp/src && git init && git commit --allow-empty -m"initial-commit"`
+      `cd /tmp/src && git init && git config user.email "tmp@example.com" && git config user.name "test user" && git commit --allow-empty -m"initial-commit"`
       `sudo chmod -R 0777 /var/chef`
     end
 
