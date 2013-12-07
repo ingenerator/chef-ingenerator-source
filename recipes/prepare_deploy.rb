@@ -21,3 +21,17 @@
 # limitations under the License.
 #
 
+unless node['project']['deploy']['release_path']
+  raise(
+    "The prepare_deploy recipe requires the node.project.deploy.release_path attribute to be set.\n"+
+    "Are you trying to include the recipe directly rather than as a deploy callback?"
+  )
+end
+
+composer_project node['project']['deploy']['release_path'] do
+  action    :install
+  only_if   { File.exists?(node['project']['deploy']['release_path']+'/composer.json') }
+  dev       node['project']['install_dev_tools']
+  run_as    node['project']['deploy']['owner']
+  quiet     false
+end

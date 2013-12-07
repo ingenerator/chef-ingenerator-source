@@ -1,5 +1,6 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
+require 'support/matchers.rb'
 
 RSpec.configure do |c|
   c.filter_run(focus: true)
