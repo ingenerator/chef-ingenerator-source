@@ -20,3 +20,19 @@
 # limitations under the License.
 #
 
+# Default deploy source for this kind of deployment
+node.default['project']['deploy']['source'] = '/vagrant'
+
+path = ::Pathname.new(node['project']['deploy']['destination'])
+directory path.parent do
+  recursive true
+  user      node['project']['deploy']['owner']
+  group     node['project']['deploy']['group']
+  mode      0755
+end
+
+link node['project']['deploy']['destination'] do
+  to    node['project']['deploy']['source']
+  user  node['project']['deploy']['owner']
+  group node['project']['deploy']['group']
+end
