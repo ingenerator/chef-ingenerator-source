@@ -21,3 +21,9 @@
 # limitations under the License.
 #
 
+unless node['project']['deploy']['release_path']
+  raise(
+    "The prepare_deploy recipe requires the node.project.deploy.release_path attribute to be set.\n"+
+    "Are you trying to include the recipe directly rather than as a deploy callback?"
+  )
+end
