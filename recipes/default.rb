@@ -31,5 +31,5 @@ elsif node['project']['deploy']['type'] == :deploy
   include_recipe "ingenerator-source::deploy_revision"
 
 else
-  raise RuntimeError "Invalid deploy type #{node['project']['deploy']['type']}"
+  raise "Invalid deploy type #{node['project']['deploy']['type']}"
 end
