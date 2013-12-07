@@ -64,6 +64,18 @@ web root using the chef deploy resource. Again, post-deploy hooks will execute a
 | node['project']['deploy']['destination'] | /var/www/{project_name}/current | the base web path for your application    |
 | node['project']['deploy']['revision']    | HEAD                            | you should checkout the desired rev first |
 
+### Marking known-unstable branches
+
+You can prevent branches that you know to be unstable from making it into production accidentally. For example, if you are
+part way through heavy refactoring of a legacy system and know there are problems that are not yet caught be your
+unit/acceptance tests.
+
+If the node's `project.deploy.allow_blocked_branch` is false (default) then the deploy run will throw an exception if a
+PROD_RELEASE_BLOCKER file is found in the checkout root directory. You should add relevant information about why the
+branch is blocked into this file.
+
+If the `project.deploy.allow_blocked_branch` is true then the deploy run will issue a warning but continue. Build slaves
+and potentially QA should have this attribute set to true.
 
 ### Deployment hooks
 

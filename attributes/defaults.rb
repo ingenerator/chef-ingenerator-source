@@ -19,12 +19,15 @@
 #
 
 
-default['project']['deploy']['type']        = :deploy
+default['project']['deploy']['type']                 = :deploy
+default['project']['deploy']['force']                = false
 # This will be reset by the default recipe if a project.name attribute is present
-default['project']['deploy']['destination'] = '/var/www/ingenerator-project'
+default['project']['deploy']['destination']          = '/var/www/ingenerator-project'
 # This will be set by the appropriate deploy recipe
-default['project']['deploy']['source']      = nil
+default['project']['deploy']['source']               = nil
 
-# The user and group who will own the checked out files
-default['project']['deploy']['owner']       = 'www-data'
-default['project']['deploy']['group']       = 'www-data'
+default['project']['deploy']['owner']                = 'www-data'
+default['project']['deploy']['group']                = 'www-data'
+
+default['project']['deploy']['allow_blocked_branch'] = false
+
