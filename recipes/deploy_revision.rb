@@ -44,7 +44,8 @@ end
 
 # Prevent hardlink problems with changing upstream references
 directory "#{node['project']['deploy']['destination']}/shared/cached-copy" do
-  action :delete
+  action    :delete
+  recursive true
 end
 
 deploy(node['project']['deploy']['destination']) do

@@ -60,7 +60,9 @@ describe 'ingenerator-source::deploy_revision' do
   it "removes the local cached-copy repository to prevent hardlink problems" do
     # The chef deployment recipe has problems with branch and commit references when new commits
     # are pulled from upstream
-    chef_run.should delete_directory('/var/www/destination/shared/cached-copy')
+    chef_run.should delete_directory('/var/www/destination/shared/cached-copy').with(
+      recursive: true
+    )
   end
 
 
