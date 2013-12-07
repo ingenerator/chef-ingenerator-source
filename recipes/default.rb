@@ -24,10 +24,10 @@ if (node['project'] && node['project']['name'])
   node.default['project']['deploy']['destination'] = "/var/www/#{node['project']['name']}"
 end
 
-if node['project']['deploy']['type'] == :in_place
+if node['project']['deploy']['type'].to_s == 'in_place'
   include_recipe "ingenerator-source::deploy_in_place"
 
-elsif node['project']['deploy']['type'] == :deploy
+elsif node['project']['deploy']['type'].to_s == 'deploy'
   include_recipe "ingenerator-source::deploy_revision"
 
 else
