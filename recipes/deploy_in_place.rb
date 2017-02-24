@@ -30,13 +30,15 @@ directory node['project']['deploy']['destination'] do
   mode      0755
 end
 
-node.override['project']['deploy']['release_path'] = node['project']['deploy']['destination']+'/current'
-link node['project']['deploy']['release_path'] do
+Ingenerator::SourceDeployment::DeploymentManager.set_release_path(node['project']['deploy']['destination']+'/current')
+link this_release_path do
   to    node['project']['deploy']['source']
   user  node['project']['deploy']['owner']
   group node['project']['deploy']['group']
 end
 
+
 # Run the deploy hooks
-include_recipe node['project']['deploy']['on_prepare']
-include_recipe node['project']['deploy']['on_complete']
+%w(on_prepare on_complete).each do | hook |
+  include_recipe node['project']['deploy'][hook] if node['project']['deploy'][hook]
+end

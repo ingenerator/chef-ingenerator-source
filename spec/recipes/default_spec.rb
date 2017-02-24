@@ -4,11 +4,11 @@ describe 'ingenerator-source::default' do
   let (:chef_run) { ChefSpec::SoloRunner.new.converge described_recipe }
 
   context 'by default' do
-    it "uses the full deployment recipe" do
+    it 'uses the full deployment recipe' do
       expect(chef_run.node['project']['deploy']['type']).to be(:deploy)
     end
 
-    it "sets the deploy destination to /var/www/{project_name}" do
+    it 'sets the deploy destination to /var/www/{project_name}' do
       chef_run = ChefSpec::SoloRunner.new do |node|
         node.normal['project']['name'] = 'thisproject'
       end.converge(described_recipe)
@@ -16,22 +16,21 @@ describe 'ingenerator-source::default' do
       expect(chef_run.node['project']['deploy']['destination']).to eq('/var/www/thisproject')
     end
 
-    it "sets the checkout owner to www-data" do
+    it 'sets the checkout owner to www-data' do
       expect(chef_run.node['project']['deploy']['owner']).to eq('www-data')
     end
 
-    it "sets the checkout group to www-data" do
+    it 'sets the checkout group to www-data' do
       expect(chef_run.node['project']['deploy']['group']).to eq('www-data')
     end
 
-    it "attaches ingenerator-source::prepare_deploy as the on_prepare hook" do
-      expect(chef_run.node['project']['deploy']['on_prepare']).to eq('ingenerator-source::prepare_deploy')
+    it 'does not have an on_prepare hook' do
+      expect(chef_run.node['project']['deploy']['on_prepare']).to be nil
     end
 
-    it "attaches ingenerator-source::complete_deploy as the on_prepare hook" do
-      expect(chef_run.node['project']['deploy']['on_complete']).to eq('ingenerator-source::complete_deploy')
+    it 'does not have an on_complete hook' do
+      expect(chef_run.node['project']['deploy']['on_complete']).to be nil
     end
-
   end
 
   context 'when node[project][deploy] is :in_place' do
@@ -93,5 +92,4 @@ describe 'ingenerator-source::default' do
       expect { chef_run }.to raise_error RuntimeError, /Invalid deploy type/
     end
   end
-
 end

@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/). Note that
 
 ## Unreleased
 
+* [BREAKING] Remove the default prepare_deploy and complete_deploy recipes - these
+  were only being used to verify the path was set and the new helper does that
+  better.
+* [BREAKING] Current release path is no longer set in node.deploy.release_path -
+  instead you must use `this_release_path` which will throw if it hasn't been
+  set (because deployment hasn't happened yet) when called.
 * [BREAKING] No longer attempts to automatically install composer packages for
   a prepare_deploy - do this in your project if you need it.
 

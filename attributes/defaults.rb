@@ -30,5 +30,5 @@ default['project']['deploy']['owner']                = 'www-data'
 default['project']['deploy']['group']                = 'www-data'
 
 default['project']['deploy']['allow_blocked_branch'] = false
-default['project']['deploy']['on_prepare']           = 'ingenerator-source::prepare_deploy'
-default['project']['deploy']['on_complete']          = 'ingenerator-source::complete_deploy'
+default['project']['deploy']['on_prepare']           = nil
+default['project']['deploy']['on_complete']          = nil

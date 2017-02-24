@@ -65,13 +65,16 @@ deploy(node['project']['deploy']['destination']) do
 
   # Run the hooks
   before_symlink do
-    node.override['project']['deploy']['release_path'] = release_path
-    run_context.send :include_recipe, node['project']['deploy']['on_prepare']
+    Ingenerator::SourceDeployment::DeploymentManager.set_release_path(release_path)
+    if node['project']['deploy']['on_prepare']
+      run_context.send :include_recipe, node['project']['deploy']['on_prepare']
+    end
   end
 
   after_restart do
-    node.override['project']['deploy']['release_path'] = release_path
-    run_context.send :include_recipe, node['project']['deploy']['on_complete']
+    if node['project']['deploy']['on_complete']
+      run_context.send :include_recipe, node['project']['deploy']['on_complete']
+    end
   end
 
 end
