@@ -2,28 +2,30 @@ require 'spec_helper'
 
 describe 'ingenerator-source::deploy_revision' do
   let (:chef_run) do
-    ChefSpec::Runner.new do |node|
-      node.set['project']['deploy']['type']                 = :deploy
-      node.set['project']['deploy']['source']               = '/source-repo'
-      node.set['project']['deploy']['destination']          = '/var/www/destination'
-      node.set['project']['deploy']['owner']                = 'foouser'
-      node.set['project']['deploy']['group']                = 'foogroup'
-      node.set['project']['deploy']['force']                = false
-      node.set['project']['deploy']['revision']             = 'some-sha'
-      node.set['project']['deploy']['allow_blocked_branch'] = true
+    ChefSpec::SoloRunner.new do |node|
+      node.normal['project']['deploy']['type']                 = :deploy
+      node.normal['project']['deploy']['source']               = '/source-repo'
+      node.normal['project']['deploy']['destination']          = '/var/www/destination'
+      node.normal['project']['deploy']['owner']                = 'foouser'
+      node.normal['project']['deploy']['group']                = 'foogroup'
+      node.normal['project']['deploy']['force']                = false
+      node.normal['project']['deploy']['revision']             = 'some-sha'
+      node.normal['project']['deploy']['allow_blocked_branch'] = true
     end.converge(described_recipe)
+  end
+
+  before(:each) do
+    allow(File).to receive(:exists?).with(anything).and_call_original
   end
 
   context "when the checkout has a PROD_RELEASE_BLOCKER file" do
     before (:each) do
-      original_exists = File.method(:exists?)
-      File.stub('exists?') { |path| original_exists.call(path) }
-      File.stub('exists?').with('/source-repo/PROD_RELEASE_BLOCKER').and_return true
+      allow(File).to receive(:exists?).with('/source-repo/PROD_RELEASE_BLOCKER').and_return true
       Chef::Log.stub(:warn).and_return true
     end
 
     it "aborts the chef run if project.deploy.allow_blocked_branch is false" do
-      chef_run.node.set['project']['deploy']['allow_blocked_branch'] = false
+      chef_run.node.normal['project']['deploy']['allow_blocked_branch'] = false
       expect { chef_run.converge(described_recipe) }.to raise_error(RuntimeError)
     end
 
@@ -36,7 +38,7 @@ describe 'ingenerator-source::deploy_revision' do
     end
 
     it "continues if project.deploy.allow_blocked_branch is true" do
-      chef_run.node.set['project']['deploy']['allow_blocked_branch'] = true
+      chef_run.node.normal['project']['deploy']['allow_blocked_branch'] = true
       chef_run.converge(described_recipe)
       chef_run.should deploy_deploy('/var/www/destination')
     end
@@ -76,7 +78,7 @@ describe 'ingenerator-source::deploy_revision' do
   end
 
   it "forces the deployment to re-rerun if required" do
-    chef_run.node.set['project']['deploy']['force'] = true
+    chef_run.node.normal['project']['deploy']['force'] = true
     chef_run.converge(described_recipe)
     chef_run.should force_deploy_deploy('/var/www/destination')
   end
@@ -103,22 +105,22 @@ describe 'ingenerator-source::deploy_revision' do
     let (:known_sha) { `cd /tmp/src && git rev-parse HEAD`.chomp("\n") }
 
     let (:chef_run) do
-      ChefSpec::Runner.new(step_into: ['deploy']) do |node|
-        node.set['project']['deploy']['type']                 = :deploy
-        node.set['project']['deploy']['source']               = '/tmp/src'
-        node.set['project']['deploy']['destination']          = '/tmp/dest'
-        node.set['project']['deploy']['revision']             = 'HEAD'
-        node.set['project']['deploy']['force']                = true
-        node.set['project']['deploy']['allow_blocked_branch'] = true
-        node.set['project']['deploy']['owner']                 = ENV['USER']
-        node.set['project']['deploy']['group']                 = `id -ng`.chomp("\n")
+      ChefSpec::SoloRunner.new(step_into: ['deploy']) do |node|
+        node.normal['project']['deploy']['type']                 = :deploy
+        node.normal['project']['deploy']['source']               = '/tmp/src'
+        node.normal['project']['deploy']['destination']          = '/tmp/dest'
+        node.normal['project']['deploy']['revision']             = 'HEAD'
+        node.normal['project']['deploy']['force']                = true
+        node.normal['project']['deploy']['allow_blocked_branch'] = true
+        node.normal['project']['deploy']['owner']                 = ENV['USER']
+        node.normal['project']['deploy']['group']                 = `id -ng`.chomp("\n")
       end.converge(described_recipe)
     end
 
     it "deploys to a directory named for the git sha and sets the release path attribute" do
       expect_path = '/tmp/dest/releases/'+known_sha
       chef_run.node['project']['deploy']['release_path'].should eq(expect_path)
-      File.symlink?('/tmp/dest/current').should be_true
+      File.symlink?('/tmp/dest/current').should be true
       File.readlink('/tmp/dest/current').should eq(expect_path)
     end
 
@@ -134,8 +136,8 @@ describe 'ingenerator-source::deploy_revision' do
   context 'by default' do
     let (:chef_run) do
       # the destination must be set by the default recipe or attributes
-      ChefSpec::Runner.new do |node|
-        node.set['project']['deploy']['destination'] = '/var/www/destination'
+      ChefSpec::SoloRunner.new do |node|
+        node.normal['project']['deploy']['destination'] = '/var/www/destination'
       end.converge(described_recipe)
     end
 
@@ -144,11 +146,11 @@ describe 'ingenerator-source::deploy_revision' do
     end
 
     it "does not force deploy" do
-      chef_run.node['project']['deploy']['force'].should be_false
+      chef_run.node['project']['deploy']['force'].should be false
     end
 
     it "does not allow deployment of blocked branches" do
-      chef_run.node['project']['deploy']['allow_blocked_branch'].should be_false
+      chef_run.node['project']['deploy']['allow_blocked_branch'].should be false
     end
   end
 

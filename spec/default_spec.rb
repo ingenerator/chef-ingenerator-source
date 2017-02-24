@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'ingenerator-source::default' do
-  let (:chef_run) { ChefSpec::Runner.new.converge described_recipe }
+  let (:chef_run) { ChefSpec::SoloRunner.new.converge described_recipe }
 
   context 'by default' do
     it "uses the full deployment recipe" do
@@ -9,8 +9,8 @@ describe 'ingenerator-source::default' do
     end
 
     it "sets the deploy destination to /var/www/{project_name}" do
-      chef_run = ChefSpec::Runner.new do |node|
-        node.set['project']['name'] = 'thisproject'
+      chef_run = ChefSpec::SoloRunner.new do |node|
+        node.normal['project']['name'] = 'thisproject'
       end.converge(described_recipe)
 
       chef_run.node['project']['deploy']['destination'].should eq('/var/www/thisproject')
@@ -36,8 +36,8 @@ describe 'ingenerator-source::default' do
 
   context 'when node[project][deploy] is :in_place' do
     let (:chef_run) do
-      ChefSpec::Runner.new do |node|
-        node.set['project']['deploy']['type'] = :in_place
+      ChefSpec::SoloRunner.new do |node|
+        node.normal['project']['deploy']['type'] = :in_place
       end.converge(described_recipe)
     end
 
@@ -48,8 +48,8 @@ describe 'ingenerator-source::default' do
 
   context 'when node[project][deploy] is :deploy' do
     let (:chef_run) do
-      ChefSpec::Runner.new do |node|
-        node.set['project']['deploy']['type'] = :deploy
+      ChefSpec::SoloRunner.new do |node|
+        node.normal['project']['deploy']['type'] = :deploy
       end.converge(described_recipe)
     end
 
@@ -60,8 +60,8 @@ describe 'ingenerator-source::default' do
 
   context 'when node[project][deploy] is \'in_place\' from json' do
     let (:chef_run) do
-      ChefSpec::Runner.new do |node|
-        node.set['project']['deploy']['type'] = 'in_place'
+      ChefSpec::SoloRunner.new do |node|
+        node.normal['project']['deploy']['type'] = 'in_place'
       end.converge(described_recipe)
     end
 
@@ -72,8 +72,8 @@ describe 'ingenerator-source::default' do
 
   context 'when node[project][deploy] is \'deploy\' from json' do
     let (:chef_run) do
-      ChefSpec::Runner.new do |node|
-        node.set['project']['deploy']['type'] = 'deploy'
+      ChefSpec::SoloRunner.new do |node|
+        node.normal['project']['deploy']['type'] = 'deploy'
       end.converge(described_recipe)
     end
 
@@ -84,8 +84,8 @@ describe 'ingenerator-source::default' do
 
   context 'when node[project][deploy] is invalid' do
     let (:chef_run) do
-      ChefSpec::Runner.new do |node|
-        node.set['project']['deploy']['type'] = 'something random'
+      ChefSpec::SoloRunner.new do |node|
+        node.normal['project']['deploy']['type'] = 'something random'
       end.converge(described_recipe)
     end
 

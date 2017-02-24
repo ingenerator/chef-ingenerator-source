@@ -8,8 +8,8 @@ and build code for a checkout on a development VM or build server.
 
 Requirements
 ------------
-- Chef 11 or higher
-- **Ruby 1.9.3 or higher**
+- Chef 12.13 or higher
+- **Ruby 2.3 or higher**
 
 Installation
 ------------

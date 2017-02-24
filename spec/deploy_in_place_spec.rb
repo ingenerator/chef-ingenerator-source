@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe 'ingenerator-source::deploy_in_place' do
   let (:chef_run) do
-    ChefSpec::Runner.new do |node|
-      node.set['project']['deploy']['type']        = :in_place
-      node.set['project']['deploy']['source']      = '/source-repo'
-      node.set['project']['deploy']['destination'] = '/var/www/destination'
-      node.set['project']['deploy']['owner']       = 'foouser'
-      node.set['project']['deploy']['group']       = 'foogroup'
+    ChefSpec::SoloRunner.new do |node|
+      node.normal['project']['deploy']['type']        = :in_place
+      node.normal['project']['deploy']['source']      = '/source-repo'
+      node.normal['project']['deploy']['destination'] = '/var/www/destination'
+      node.normal['project']['deploy']['owner']       = 'foouser'
+      node.normal['project']['deploy']['group']       = 'foogroup'
     end.converge(described_recipe)
   end
 
@@ -44,8 +44,8 @@ describe 'ingenerator-source::deploy_in_place' do
   context 'by default' do
     let (:chef_run) do
       # the destination must be set by the default recipe or attributes
-      ChefSpec::Runner.new do |node|
-        node.set['project']['deploy']['destination'] = '/var/www/destination'
+      ChefSpec::SoloRunner.new do |node|
+        node.normal['project']['deploy']['destination'] = '/var/www/destination'
       end.converge(described_recipe)
     end
 
