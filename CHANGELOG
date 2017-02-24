@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/). Note that
 
 ## Unreleased
 
+## 1.0.0 (2017-02-24)
+
 * [BREAKING] Remove the default prepare_deploy and complete_deploy recipes - these
   were only being used to verify the path was set and the new helper does that
   better.
