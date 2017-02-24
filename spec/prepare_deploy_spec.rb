@@ -7,59 +7,8 @@ describe 'ingenerator-source::prepare_deploy' do
     end.converge(described_recipe)
   end
 
-  before(:each) do
-    allow(File).to receive(:exists?).with(anything).and_call_original
-  end
-
-  context 'when the project has a composer.json in root' do
-	before (:each) do
-    allow(File).to receive(:exists?).with('/var/dest/releases/abcdef/composer.json').and_return true
-	end
-
-	it "installs the composer dependencies" do
-	  expect(chef_run).to install_composer_project('/var/dest/releases/abcdef')
-	end
-
-	it "installs dev dependencies if install_dev_tools is set" do
-	  chef_run.node.normal['project']['install_dev_tools'] = true
-	  chef_run.converge(described_recipe)
-	  expect(chef_run).to install_composer_project('/var/dest/releases/abcdef').with(
-	    dev: true
-	  )
-	end
-
-	it "does not install dev dependencies without install_dev_tools" do
-	  chef_run.node.normal['project']['install_dev_tools'] = false
-      chef_run.converge(described_recipe)
-      expect(chef_run).to install_composer_project('/var/dest/releases/abcdef').with(
-        dev: false
-      )
-	end
-
-	it "runs composer as the deploy user" do
-	  chef_run.node.normal['project']['deploy']['owner'] = 'someuser'
-      chef_run.converge(described_recipe)
-      expect(chef_run).to install_composer_project('/var/dest/releases/abcdef').with(
-        run_as: 'someuser'
-      )
-	end
-
-	it "runs composer in verbose mode so errors are visible" do
-      expect(chef_run).to install_composer_project('/var/dest/releases/abcdef').with(
-        quiet: false
-      )
-    end
-  end
-
-  context 'without a composer.json' do
-  	before (:each) do
-      allow(File).to receive(:exists?).with('/var/dest/releases/abcdef/composer.json').and_return false
-  	end
-
-  	it "does not install composer dependencies" do
-  	  expect(chef_run).not_to install_composer_project('/var/dest/releases/abcdef')
-  	end
-
+  it "does nothing as standard" do
+    expect(chef_run.resource_collection).to be_empty
   end
 
   context 'when node[project][deploy][release_path] is not set' do

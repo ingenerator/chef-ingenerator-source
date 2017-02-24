@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/). Note that
 
 ## Unreleased
 
+* [BREAKING] No longer attempts to automatically install composer packages for
+  a prepare_deploy - do this in your project if you need it.
+
 ## 0.1.0 (2017-02-24)
 
 * First tagged release

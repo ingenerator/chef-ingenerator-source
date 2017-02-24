@@ -11,5 +11,3 @@ version '1.0.0-pre'
 %w(ubuntu).each do |os|
   supports os
 end
-
-depends 'composer'

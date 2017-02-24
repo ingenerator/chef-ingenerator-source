@@ -90,7 +90,7 @@ describe 'ingenerator-source::default' do
     end
 
     it 'should throw an exception' do
-      expect { chef_run }.to raise_error
+      expect { chef_run }.to raise_error RuntimeError, /Invalid deploy type/
     end
   end
 
