@@ -1,6 +1,6 @@
 inGenerator Source cookbook
 =================================
-[![Build Status](https://travis-ci.org/ingenerator/chef-ingenerator-source.png?branch=master)](https://travis-ci.org/ingenerator/chef-ingenerator-source)
+[![Build Status](https://travis-ci.org/ingenerator/chef-ingenerator-source.png?branch=1.x)](https://travis-ci.org/ingenerator/chef-ingenerator-source)
 
 The `ingenerator-source` cookbook provides a standard framework to manage deployment and provisioning of project source
 code on an instance. This is used either for atomic checkouts on a live instance, or for running the same provisioning
