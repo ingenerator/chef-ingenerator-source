@@ -5,7 +5,7 @@ describe 'ingenerator-source::default' do
 
   context 'by default' do
     it "uses the full deployment recipe" do
-      chef_run.node['project']['deploy']['type'].should be(:deploy)
+      expect(chef_run.node['project']['deploy']['type']).to be(:deploy)
     end
 
     it "sets the deploy destination to /var/www/{project_name}" do
@@ -13,23 +13,23 @@ describe 'ingenerator-source::default' do
         node.normal['project']['name'] = 'thisproject'
       end.converge(described_recipe)
 
-      chef_run.node['project']['deploy']['destination'].should eq('/var/www/thisproject')
+      expect(chef_run.node['project']['deploy']['destination']).to eq('/var/www/thisproject')
     end
 
     it "sets the checkout owner to www-data" do
-      chef_run.node['project']['deploy']['owner'].should eq('www-data')
+      expect(chef_run.node['project']['deploy']['owner']).to eq('www-data')
     end
 
     it "sets the checkout group to www-data" do
-      chef_run.node['project']['deploy']['group'].should eq('www-data')
+      expect(chef_run.node['project']['deploy']['group']).to eq('www-data')
     end
 
     it "attaches ingenerator-source::prepare_deploy as the on_prepare hook" do
-      chef_run.node['project']['deploy']['on_prepare'].should eq('ingenerator-source::prepare_deploy')
+      expect(chef_run.node['project']['deploy']['on_prepare']).to eq('ingenerator-source::prepare_deploy')
     end
 
     it "attaches ingenerator-source::complete_deploy as the on_prepare hook" do
-      chef_run.node['project']['deploy']['on_complete'].should eq('ingenerator-source::complete_deploy')
+      expect(chef_run.node['project']['deploy']['on_complete']).to eq('ingenerator-source::complete_deploy')
     end
 
   end
@@ -42,7 +42,7 @@ describe 'ingenerator-source::default' do
     end
 
     it 'should run the deploy_in_place recipe' do
-      chef_run.should include_recipe 'ingenerator-source::deploy_in_place'
+      expect(chef_run).to include_recipe 'ingenerator-source::deploy_in_place'
     end
   end
 
@@ -54,7 +54,7 @@ describe 'ingenerator-source::default' do
     end
 
     it 'should run the deploy_revision recipe' do
-      chef_run.should include_recipe 'ingenerator-source::deploy_revision'
+      expect(chef_run).to include_recipe 'ingenerator-source::deploy_revision'
     end
   end
 
@@ -66,7 +66,7 @@ describe 'ingenerator-source::default' do
     end
 
     it 'should run the deploy_in_place recipe' do
-      chef_run.should include_recipe 'ingenerator-source::deploy_in_place'
+      expect(chef_run).to include_recipe 'ingenerator-source::deploy_in_place'
     end
   end
 
@@ -78,7 +78,7 @@ describe 'ingenerator-source::default' do
     end
 
     it 'should run the deploy_revision recipe' do
-      chef_run.should include_recipe 'ingenerator-source::deploy_revision'
+      expect(chef_run).to include_recipe 'ingenerator-source::deploy_revision'
     end
   end
 

@@ -12,7 +12,7 @@ describe 'ingenerator-source::deploy_in_place' do
   end
 
   it "ensures the destination parent directory exists and is owned by the checkout owner" do
-    chef_run.should create_directory('/var/www/destination').with(
+    expect(chef_run).to create_directory('/var/www/destination').with(
       user:      'foouser',
       group:     'foogroup',
       mode:      0755,
@@ -21,24 +21,24 @@ describe 'ingenerator-source::deploy_in_place' do
   end
 
   it "creates a symlink from source to destination/current owned by the checkout owner" do
-    chef_run.should create_link('/var/www/destination/current').with(
+    expect(chef_run).to create_link('/var/www/destination/current').with(
       user:   'foouser',
       group:  'foogroup'
     )
     link = chef_run.link('/var/www/destination/current')
-	link.should link_to('/source-repo')
+	expect(link).to link_to('/source-repo')
   end
 
   it "sets the release path attribute on the node for use in recipes" do
-    chef_run.node['project']['deploy']['release_path'].should eq('/var/www/destination/current')
+    expect(chef_run.node['project']['deploy']['release_path']).to eq('/var/www/destination/current')
   end
 
   it "runs the configured on_prepare deploy hook recipe" do
-    chef_run.should include_recipe(chef_run.node['project']['deploy']['on_prepare'])
+    expect(chef_run).to include_recipe(chef_run.node['project']['deploy']['on_prepare'])
   end
 
   it "runs the configured on_complete deploy hook recipe" do
-    chef_run.should include_recipe(chef_run.node['project']['deploy']['on_complete'])
+    expect(chef_run).to include_recipe(chef_run.node['project']['deploy']['on_complete'])
   end
 
   context 'by default' do
@@ -50,15 +50,15 @@ describe 'ingenerator-source::deploy_in_place' do
     end
 
     it "sets the deployment source to /vagrant" do
-      chef_run.node['project']['deploy']['source'].should eq('/vagrant')
+      expect(chef_run.node['project']['deploy']['source']).to eq('/vagrant')
     end
 
     it "sets the checkout owner to www-data" do
-      chef_run.node['project']['deploy']['owner'].should eq('www-data')
+      expect(chef_run.node['project']['deploy']['owner']).to eq('www-data')
     end
 
     it "sets the checkout group to www-data" do
-      chef_run.node['project']['deploy']['group'].should eq('www-data')
+      expect(chef_run.node['project']['deploy']['group']).to eq('www-data')
     end
 
   end

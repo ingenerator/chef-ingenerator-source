@@ -17,13 +17,13 @@ describe 'ingenerator-source::prepare_deploy' do
 	end
 
 	it "installs the composer dependencies" do
-	  chef_run.should install_composer_project('/var/dest/releases/abcdef')
+	  expect(chef_run).to install_composer_project('/var/dest/releases/abcdef')
 	end
 
 	it "installs dev dependencies if install_dev_tools is set" do
 	  chef_run.node.normal['project']['install_dev_tools'] = true
 	  chef_run.converge(described_recipe)
-	  chef_run.should install_composer_project('/var/dest/releases/abcdef').with(
+	  expect(chef_run).to install_composer_project('/var/dest/releases/abcdef').with(
 	    dev: true
 	  )
 	end
@@ -31,7 +31,7 @@ describe 'ingenerator-source::prepare_deploy' do
 	it "does not install dev dependencies without install_dev_tools" do
 	  chef_run.node.normal['project']['install_dev_tools'] = false
       chef_run.converge(described_recipe)
-      chef_run.should install_composer_project('/var/dest/releases/abcdef').with(
+      expect(chef_run).to install_composer_project('/var/dest/releases/abcdef').with(
         dev: false
       )
 	end
@@ -39,13 +39,13 @@ describe 'ingenerator-source::prepare_deploy' do
 	it "runs composer as the deploy user" do
 	  chef_run.node.normal['project']['deploy']['owner'] = 'someuser'
       chef_run.converge(described_recipe)
-      chef_run.should install_composer_project('/var/dest/releases/abcdef').with(
+      expect(chef_run).to install_composer_project('/var/dest/releases/abcdef').with(
         run_as: 'someuser'
       )
 	end
 
 	it "runs composer in verbose mode so errors are visible" do
-      chef_run.should install_composer_project('/var/dest/releases/abcdef').with(
+      expect(chef_run).to install_composer_project('/var/dest/releases/abcdef').with(
         quiet: false
       )
     end
@@ -57,7 +57,7 @@ describe 'ingenerator-source::prepare_deploy' do
   	end
 
   	it "does not install composer dependencies" do
-  	  chef_run.should_not install_composer_project('/var/dest/releases/abcdef')
+  	  expect(chef_run).not_to install_composer_project('/var/dest/releases/abcdef')
   	end
 
   end
