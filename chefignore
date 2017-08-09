@@ -1,0 +1,6 @@
+# Don't include version control, specs or build-time dependencies in the cookbook
+.git
+.git/*
+spec/*
+test/*
+vendor/*
