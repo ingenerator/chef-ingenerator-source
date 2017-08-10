@@ -7,7 +7,7 @@ description 'Manages deployment and provisioning of project source code on an in
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 issues_url 'https://github.com/ingenerator/chef-ingenerator-source/issues'
 source_url 'https://github.com/ingenerator/chef-ingenerator-source'
-version '1.0.0'
+version '2.0.0'
 
 %w(ubuntu).each do |os|
   supports os
