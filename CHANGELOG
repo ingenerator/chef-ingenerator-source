@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/). Note that
 
 ## Unreleased
 
+## 2.0.0 (2017-08-10)
+
+* Exclude unnecessary build-time files and dependencies from the vendored cookbook
+* Update build dependencies and build against Chef 12 and Chef 13
+
 ## 1.0.0 (2017-02-24)
 
 * [BREAKING] Remove the default prepare_deploy and complete_deploy recipes - these
